@@ -16,4 +16,8 @@ const create = async(product)=> {
     return product;
 } 
 
-module.exports = {getAll,getBySku,create}
+const deleteBySku = async(sku)=>{
+    const [result]= await mysqlPool.query('delete from test.products where sku=?', sku)
+    return result.affectedRows;
+}
+module.exports = {getAll,getBySku,create, deleteBySku}

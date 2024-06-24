@@ -2,7 +2,7 @@
 
 ## Dependencies
 
-- express: Rest server
+- express: Api server
 - nodemon: Development tool
 - mysql2: MySQL database connect
 - dotenv: .env file by environment variables
@@ -50,7 +50,7 @@ cons host=  process.env.DB_HOST
 ```
 ## mysql2
 
-Create pool with
+Create pool with:
 
 ```js
 
