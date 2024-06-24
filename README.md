@@ -4,8 +4,8 @@
 
 - express: Api server
 - nodemon: Development tool
-- mysql2: MySQL database connect
 - dotenv: .env file by environment variables
+- mysql2: MySQL database connect
 
 ## Express
 ```js
@@ -21,6 +21,7 @@ app.listen(port, ()=>{
     console.log(`Listen in port: ${port}`)
 })
 ```
+
 By parse body json, midleware: app.use(express.json())
 
 Controller, with use Router:
@@ -48,6 +49,21 @@ By use, set with require("dotenv").config() and read with process.env.ENV_NAME
 require("dotenv").config()
 cons host=  process.env.DB_HOST
 ```
+
+Define port in env:
+```properties
+PORT=3002
+```
+ In index.js:
+
+ ```js
+ //Server
+const port = process.env.PORT || 3000;
+app.listen(port, ()=>{
+    console.log(`Listen in port: ${port}`)
+})
+ ```
+
 ## mysql2
 
 Create pool with:
@@ -82,6 +98,17 @@ IN repository:
 
 ```
 
+Error handling in controller:
+
+```js
+    try {
+        const result =  await create(req.body)
+        return res.send(result)            
+    } catch (error) {
+        console.log("Err:", error)
+        res.status(500).send('Internal error!!!')                
+    }
+```
 
 ## Database
 
