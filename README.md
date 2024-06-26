@@ -121,3 +121,55 @@ CREATE TABLE test.products (
 	price DOUBLE NULL
 )
 ```
+
+## Axios by JWT 
+
+Add dependence **axios**
+
+```cmd
+npm i axios
+```
+
+Create repositoty:
+
+```js
+const axios = require('axios')
+const getUser = async (authorization) => {
+    return await axios.get(
+        process.env.URL_AUTH,
+        {
+            headers: {
+                Authorization: authorization
+            }
+        }
+    ).then(res => {
+        return { status: 200, message: res.data };
+    }).catch(err => {
+        return { status: err.response.status, message: err.response.data.message || 'Unauthorized' };
+    });
+}
+
+module.exports = { getUser }
+```
+
+Add midleware in app:
+
+```js
+app.use(express.json())
+
+//Auth
+app.use(async (req,res,next)=>{
+    const result = await getUser(req.header("Authorization"))
+    if(result.status!=200) return res.status(result.status).send(result.message)
+    const client_access= result?.message?.resource_access?.backendtest?.roles
+
+    const reader = client_access.find(rol=>rol=="reader")
+    const writer = client_access.find(rol=>rol=="writer")
+    
+    if (req.method=="GET" && (reader || writer)) return next()
+    if (req.method!="GET" && writer) return  next()
+    return res.status(403).send('Forbidden')
+})
+//Routes
+app.use("/product", router)
+```
